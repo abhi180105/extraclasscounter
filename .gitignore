@@ -1,12 +1,58 @@
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
 venv/
-.venv/
 env/
-.env/
-*.log
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
 .DS_Store
-exports/*.txt
+Thumbs.db
+
+# Application specific
+*.db
+*.sqlite
+*.sqlite3
+.extraclasscounter/
+
+# Temporary files
+*.tmp
+*.temp
+~*
+.~lock.*
+
+# Project files
+*.json
+*.xlsx
+*.xls
+*.csv
+
+# Logs
+*.log

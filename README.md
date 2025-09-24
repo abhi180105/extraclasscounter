@@ -10,7 +10,7 @@ A PyQt6-based desktop application for calculating extra classes needed in educat
 - **Manual Subject Management**: Add, edit, and remove subjects with custom schedules
 - **Real-time Calculation**: Shows exactly how many extra classes are needed per subject
 - **Export Results**: Save calculation summaries to text files
-- **Scrollable Results**: Dark-themed result area with copy functionality
+- **Scrollable Results**: Dark-themed result sidebar with copy functionality
 
 ## How It Works
 
@@ -107,7 +107,7 @@ extraclasscounter/
 ### Main Interface
 - Clean, intuitive interface with table for subject management
 - Visual calendar for holiday selection
-- Dark-themed scrollable results area
+- Dark-themed scrollable results sidebar
 
 ### Calculation Results
 ```
