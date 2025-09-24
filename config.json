@@ -1,0 +1,26 @@
+{
+  "app": {
+    "name": "Extra Class Counter",
+    "version": "1.0.0",
+    "semester_weeks": 15,
+    "lab_duration": 2
+  },
+  "paths": {
+    "model_path": "yolo11m.pt",
+    "export_dir": "exports",
+    "data_dir": "data"
+  },
+  "defaults": {
+    "holidays": [
+      "2024-10-02",
+      "2024-12-25"
+    ],
+    "working_days": [0, 1, 2, 3, 4],
+    "weekly_hours": 40
+  },
+  "ocr": {
+    "confidence_threshold": 0.5,
+    "lab_width_threshold": 150,
+    "fallback_ocr": true
+  }
+}
