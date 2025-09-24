@@ -1,0 +1,95 @@
+{
+  "subjects": [
+    {
+      "name": "ADA",
+      "conducted": 53,
+      "weekly": 5,
+      "days": {
+        "Mon": 3,
+        "Tue": 0,
+        "Wed": 0,
+        "Thu": 1,
+        "Fri": 1,
+        "Sat": 0,
+        "Sun": 0
+      }
+    },
+    {
+      "name": "BS",
+      "conducted": 30,
+      "weekly": 3,
+      "days": {
+        "Mon": 2,
+        "Tue": 0,
+        "Wed": 1,
+        "Thu": 0,
+        "Fri": 0,
+        "Sat": 0,
+        "Sun": 0
+      }
+    },
+    {
+      "name": "EN",
+      "conducted": 51,
+      "weekly": 5,
+      "days": {
+        "Mon": 0,
+        "Tue": 1,
+        "Wed": 1,
+        "Thu": 1,
+        "Fri": 2,
+        "Sat": 0,
+        "Sun": 0
+      }
+    },
+    {
+      "name": "SKE",
+      "conducted": 22,
+      "weekly": 2,
+      "days": {
+        "Mon": 0,
+        "Tue": 1,
+        "Wed": 1,
+        "Thu": 0,
+        "Fri": 0,
+        "Sat": 0,
+        "Sun": 0
+      }
+    },
+    {
+      "name": "DBMS",
+      "conducted": 40,
+      "weekly": 4,
+      "days": {
+        "Mon": 0,
+        "Tue": 1,
+        "Wed": 0,
+        "Thu": 1,
+        "Fri": 2,
+        "Sat": 0,
+        "Sun": 0
+      }
+    },
+    {
+      "name": "EIOT",
+      "conducted": 34,
+      "weekly": 3,
+      "days": {
+        "Mon": 0,
+        "Tue": 2,
+        "Wed": 0,
+        "Thu": 1,
+        "Fri": 0,
+        "Sat": 0,
+        "Sun": 0
+      }
+    }
+  ],
+  "semester_end": "2025-10-30",
+  "holidays": [
+    "2025-10-02",
+    "2025-10-22",
+    "2025-10-23",
+    "2025-10-20"
+  ]
+}

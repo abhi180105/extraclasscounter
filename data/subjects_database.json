@@ -102,37 +102,37 @@
     "avg_weekly_slots": 5
   },
   "ADA": {
-    "count": 6,
+    "count": 18,
     "first_seen": "2025-09-24",
     "last_seen": "2025-09-24",
     "avg_weekly_slots": 5.0
   },
   "BS": {
-    "count": 6,
+    "count": 18,
     "first_seen": "2025-09-24",
     "last_seen": "2025-09-24",
     "avg_weekly_slots": 3.0
   },
   "EN": {
-    "count": 6,
+    "count": 18,
     "first_seen": "2025-09-24",
     "last_seen": "2025-09-24",
     "avg_weekly_slots": 5.0
   },
   "SKE": {
-    "count": 6,
+    "count": 18,
     "first_seen": "2025-09-24",
     "last_seen": "2025-09-24",
     "avg_weekly_slots": 2.0
   },
   "DBMS": {
-    "count": 6,
+    "count": 18,
     "first_seen": "2025-09-24",
     "last_seen": "2025-09-24",
     "avg_weekly_slots": 4.0
   },
   "EIOT": {
-    "count": 6,
+    "count": 18,
     "first_seen": "2025-09-24",
     "last_seen": "2025-09-24",
     "avg_weekly_slots": 3.0
