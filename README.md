@@ -34,7 +34,10 @@ ADA Subject:
 
 ## Installation
 
-### Quick Start
+### Download Executable (Recommended)
+Download the latest release from [GitHub Releases](https://github.com/abhi180105/extraclasscounter/releases) and run the executable directly.
+
+### Quick Start (From Source)
 ```bash
 git clone https://github.com/abhi180105/extraclasscounter.git
 cd extraclasscounter
@@ -53,6 +56,31 @@ pip install -r requirements.txt
 
 # Run application
 python main.py
+```
+
+### Build Executable
+
+#### Linux/macOS
+```bash
+# Build standalone executable
+chmod +x build.sh
+./build.sh
+
+# Executable will be in dist/ExtraClassCounter
+```
+
+#### Windows
+```cmd
+# Build standalone executable
+build.bat
+
+# Executable will be in dist\ExtraClassCounter.exe
+```
+
+#### Cross-Platform (Python)
+```bash
+# Build for current platform
+python build_cross_platform.py
 ```
 
 ## Usage

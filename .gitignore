@@ -56,3 +56,9 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Build files
+build/
+dist/
+*.spec
+build_env/

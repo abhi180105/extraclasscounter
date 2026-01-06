@@ -102,39 +102,93 @@
     "avg_weekly_slots": 5
   },
   "ADA": {
-    "count": 18,
+    "count": 22,
     "first_seen": "2025-09-24",
-    "last_seen": "2025-09-24",
+    "last_seen": "2025-09-28",
     "avg_weekly_slots": 5.0
   },
   "BS": {
-    "count": 18,
+    "count": 22,
     "first_seen": "2025-09-24",
-    "last_seen": "2025-09-24",
+    "last_seen": "2025-09-28",
     "avg_weekly_slots": 3.0
   },
   "EN": {
-    "count": 18,
+    "count": 22,
     "first_seen": "2025-09-24",
-    "last_seen": "2025-09-24",
+    "last_seen": "2025-09-28",
     "avg_weekly_slots": 5.0
   },
   "SKE": {
-    "count": 18,
+    "count": 25,
     "first_seen": "2025-09-24",
-    "last_seen": "2025-09-24",
+    "last_seen": "2026-01-06",
     "avg_weekly_slots": 2.0
   },
   "DBMS": {
-    "count": 18,
+    "count": 22,
     "first_seen": "2025-09-24",
-    "last_seen": "2025-09-24",
+    "last_seen": "2025-09-28",
     "avg_weekly_slots": 4.0
   },
   "EIOT": {
-    "count": 18,
+    "count": 22,
     "first_seen": "2025-09-24",
-    "last_seen": "2025-09-24",
+    "last_seen": "2025-09-28",
     "avg_weekly_slots": 3.0
+  },
+  "SE": {
+    "count": 3,
+    "first_seen": "2026-01-05",
+    "last_seen": "2026-01-06",
+    "avg_weekly_slots": 5.0
+  },
+  "HVCO": {
+    "count": 3,
+    "first_seen": "2026-01-05",
+    "last_seen": "2026-01-06",
+    "avg_weekly_slots": 1.0
+  },
+  "EMBEDDED": {
+    "count": 3,
+    "first_seen": "2026-01-05",
+    "last_seen": "2026-01-06",
+    "avg_weekly_slots": 3.0
+  },
+  "HAPPINESS": {
+    "count": 3,
+    "first_seen": "2026-01-05",
+    "last_seen": "2026-01-06",
+    "avg_weekly_slots": 2.0
+  },
+  "PFE": {
+    "count": 3,
+    "first_seen": "2026-01-05",
+    "last_seen": "2026-01-06",
+    "avg_weekly_slots": 1.0
+  },
+  "CYBER": {
+    "count": 3,
+    "first_seen": "2026-01-05",
+    "last_seen": "2026-01-06",
+    "avg_weekly_slots": 4.0
+  },
+  "AIML": {
+    "count": 3,
+    "first_seen": "2026-01-05",
+    "last_seen": "2026-01-06",
+    "avg_weekly_slots": 5.0
+  },
+  "New Subject": {
+    "count": 1,
+    "first_seen": "2026-01-05",
+    "last_seen": "2026-01-05",
+    "avg_weekly_slots": 5
+  },
+  "CC": {
+    "count": 1,
+    "first_seen": "2026-01-06",
+    "last_seen": "2026-01-06",
+    "avg_weekly_slots": 5
   }
 }

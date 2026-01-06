@@ -9,10 +9,11 @@ from PyQt6.QtGui import QFont, QAction, QPalette, QKeySequence
 import json
 import sqlite3
 import os
+import re
+import pandas as pd
 from calculator import calculate_summary
 from data_manager import DataManager
 import datetime
-import json
 
 class ExtraClassApp(QMainWindow):
     def __init__(self):
@@ -367,33 +368,6 @@ class ExtraClassApp(QMainWindow):
         
         # Update weekly slots
         self.update_weekly_slots_for_row(row)
-    
-    def extract_subject_name(self, cell_value):
-        """Extract subject name from timetable cell"""
-        # Remove common suffixes and extract subject code
-        cell_value = cell_value.replace('-L', '').replace('-P', '').replace(' Lab', '')
-        
-        # Split by space or hyphen and take first meaningful part
-        parts = cell_value.replace('(', ' ').replace(')', ' ').split()
-        if parts:
-            subject = parts[0].strip()
-            # Filter out common non-subject words
-            if subject.upper() not in ['FBL', 'LUNCH', 'BREAK', '']:
-                return subject.upper()
-        return None
-    
-    def validate_days_schedule(self, schedule):
-        """Validate days schedule format: Mon-2,Tue-1,Thu-2"""
-        try:
-            valid_days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-            parts = schedule.split(',')
-            for part in parts:
-                day, count = part.strip().split('-')
-                if day not in valid_days or not count.isdigit() or int(count) <= 0:
-                    return False
-            return True
-        except:
-            return False
 
     def load_excel(self):
         try:
@@ -404,120 +378,99 @@ class ExtraClassApp(QMainWindow):
                 "Excel Files (*.xlsx *.xls);;CSV Files (*.csv)"
             )
             if file:
-                import pandas as pd
-                
+
                 # Read Excel/CSV file
-                if file.endswith('.csv'):
-                    df = pd.read_csv(file, header=0)
-                else:
-                    df = pd.read_excel(file, header=0)
-                
-                # If columns are unnamed, try using first row as headers
-                if any('Unnamed:' in str(col) for col in df.columns):
-                    if file.endswith('.csv'):
-                        df = pd.read_csv(file, header=1)  # Try second row as header
-                    else:
-                        df = pd.read_excel(file, header=1)  # Try second row as header
-                    
-                    # If still unnamed, use first data row as column names
-                    if any('Unnamed:' in str(col) for col in df.columns):
-                        if file.endswith('.csv'):
-                            df = pd.read_csv(file, header=None)
-                        else:
-                            df = pd.read_excel(file, header=None)
-                        
-                        # Use first row as column names
-                        df.columns = df.iloc[0]
-                        df = df.drop(df.index[0]).reset_index(drop=True)
-                
-                # Find DAY column (flexible naming)
-                day_col = None
-                for col in df.columns:
-                    col_str = str(col).upper().strip()
-                    if col_str in ['DAY', 'DAYS', 'DAY OF WEEK', 'WEEKDAY'] or any(day in col_str for day in ['MON', 'TUE', 'WED']):
-                        day_col = col
-                        break
-                
-                # If no DAY column found, check if first column contains day names
-                if not day_col and len(df.columns) > 0:
-                    first_col = df.columns[0]
-                    first_col_values = df[first_col].astype(str).str.upper()
-                    if any(day in ' '.join(first_col_values.values) for day in ['MON', 'TUE', 'WED', 'THU', 'FRI']):
-                        day_col = first_col
-                
-                if not day_col:
-                    QMessageBox.warning(self, "Invalid Format", 
-                                      f"Excel file must have a DAY column or days in first column. Found columns: {list(df.columns)}\nFirst few rows: {df.head(3).to_string()}")
+                df = pd.read_excel(file, header=None) if file.endswith(('.xlsx', '.xls')) else pd.read_csv(file, header=None)
+
+                # Find header row and day column
+                header_row_index, day_col_index = self._find_header_and_day_col(df)
+
+                if header_row_index is None or day_col_index is None:
+                    QMessageBox.warning(self, "Invalid Format", "Could not automatically detect the timetable structure. Please ensure the Excel file has a clear header row with a 'Day' column.")
                     return
-                
+
+                # Set the header
+                df.columns = df.iloc[header_row_index]
+                # Remove rows above the header
+                df = df.iloc[header_row_index + 1:].reset_index(drop=True)
+                day_col_name = df.columns[day_col_index]
+
                 # Clear existing data
                 self.table.setRowCount(0)
                 
                 # Extract subjects from timetable
-                subjects_count = {}
-                
-                # Skip header row and process each day
-                for _, row in df.iterrows():
-                    day = str(row[day_col]).strip().upper()
-                    if day not in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']:
-                        continue
-                    
-                    # Get time slot columns
-                    time_cols = [col for col in df.columns if col not in [day_col, 'BATCH']]
-                    
-                    # Check each time slot for subjects
-                    for col in time_cols:
-                        cell_value = str(row[col]).strip() if pd.notna(row[col]) else ''
-                        if not cell_value or cell_value == 'nan':
-                            continue
-                        
-                        subject = self.extract_subject_name(cell_value)
-                        if subject:
-                            # Check if it's a lab class
-                            lab_keywords = ['lab', 'practical', 'prac', 'laboratory', 'workshop']
-                            is_lab = any(keyword in cell_value.lower() for keyword in lab_keywords)
-                            
-                            # Check for -P suffix (Practical)
-                            has_p_suffix = '-p' in cell_value.lower()
-                            
-                            # Also check if subject name itself indicates lab
-                            subject_lab = 'lab' in subject.lower() if subject else False
-                            
-                            class_count = 2 if (is_lab or subject_lab or has_p_suffix) else 1
-                            
-                            if subject not in subjects_count:
-                                subjects_count[subject] = {}
-                            if day not in subjects_count[subject]:
-                                subjects_count[subject][day] = 0
-                            subjects_count[subject][day] += class_count
+                subjects_count = self._extract_subjects_from_df(df, day_col_name)
                 
                 # Add subjects to table
                 for subject, day_counts in subjects_count.items():
-                    days_schedule = []
-                    weekly_total = 0
-                    
-                    for day, count in day_counts.items():
-                        days_schedule.append(f"{day.title()}-{count}")
-                        weekly_total += count
-                    
+                    weekly_total = sum(day_counts.values())
                     if weekly_total > 0:
-                        # Convert to day_counts dictionary
-                        day_counts = {}
-                        for day_schedule in days_schedule:
-                            if '-' in day_schedule:
-                                day, count = day_schedule.split('-', 1)
-                                day_counts[day] = int(count)
-                            else:
-                                # Handle case where there's no '-' separator
-                                day_counts[day_schedule] = 1
-                        
                         self.add_subject_to_table(subject, 0, weekly_total, day_counts)
                 
-                self.file_label.setText(f"Loaded: {file.split('/')[-1]} ({len(df)} subjects)")
+                self.file_label.setText(f"Loaded: {os.path.basename(file)} ({len(subjects_count)} subjects)")
                 self.result_label.setText("Excel timetable loaded. Enter conducted classes and calculate.")
                 
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to load Excel file: {str(e)}")
+
+    def _find_header_and_day_col(self, df):
+        """Find the header row and the day column index."""
+        time_pattern = re.compile(r'\d{1,2}:\d{2}')
+        day_keywords = ['DAY', 'DAYS', 'DAY OF WEEK', 'WEEKDAY']
+
+        for i, row in df.head(10).iterrows():
+            row_values = [str(x).upper().strip() for x in row.values]
+            
+            # Check if the row contains a day keyword or time-like strings
+            is_header = any(keyword in row_values for keyword in day_keywords) or any(time_pattern.search(val) for val in row_values)
+
+            if is_header:
+                # Find the day column in this potential header row
+                for j, cell_val in enumerate(row_values):
+                    if cell_val in day_keywords:
+                        return i, j
+        return None, None
+
+    def _extract_subjects_from_df(self, df, day_col_name):
+        """Extract subjects and their schedules from the DataFrame."""
+        subjects_count = {}
+        days_of_week = {
+            'MON': 'Mon', 'TUE': 'Tue', 'WED': 'Wed', 'THU': 'Thu', 'FRI': 'Fri', 'SAT': 'Sat', 'SUN': 'Sun'
+        }
+
+        for _, row in df.iterrows():
+            day = str(row[day_col_name]).strip().upper()[:3]
+            if day not in days_of_week:
+                continue
+
+            for col_name, cell_value in row.items():
+                if col_name == day_col_name or pd.isna(cell_value):
+                    continue
+
+                subject = self._extract_subject_name(str(cell_value))
+                if subject:
+                    class_count = 2 if self._is_lab_class(str(cell_value)) else 1
+                    subjects_count.setdefault(subject, {d: 0 for d in days_of_week.values()})
+                    subjects_count[subject][days_of_week[day]] += class_count
+        return subjects_count
+
+    def _extract_subject_name(self, cell_value):
+        """Extract subject name from timetable cell."""
+        cell_value = cell_value.upper().strip()
+        # Remove common lab suffixes and other noise
+        cell_value = cell_value.replace('-L', '').replace('-P', '').replace(' LAB', '').replace('(LAB)', '')
+        parts = re.split(r'[\s\-/(\[\])]', cell_value)
+        if parts:
+            subject = parts[0].strip()
+            if subject and subject not in ['FBL', 'LUNCH', 'BREAK']:
+                return subject
+        return None
+
+    def _is_lab_class(self, cell_value):
+        """Check if a class is a lab class."""
+        cell_value = cell_value.lower()
+        lab_keywords = ['lab', 'practical', 'prac', 'workshop', '-p']
+        return any(keyword in cell_value for keyword in lab_keywords)
     
     def add_subject(self):
         """Add new subject row"""
@@ -846,7 +799,7 @@ class ExtraClassApp(QMainWindow):
                         subject_data['days']
                     )
                 
-                self.file_label.setText(f"Loaded: {file.split('/')[-1]}")
+                self.file_label.setText(f"Loaded: {os.path.basename(file)}")
                 QMessageBox.information(self, "Success", f"Project loaded from {file}")
                 
         except Exception as e:
